@@ -50,45 +50,58 @@ def get_link(company, location, state):
 
 
 def get_links(soup, company):
-    links = []
+
+    # get list of all jobs
     jobs = soup.find_all(
         "a",
         attrs={
             "class": lambda e: e.startswith("tapItem fs-unmask result") if e else False
         },
-    )  # got list of all jobs
-    names = soup.find_all(class_="turnstileLink companyOverviewLink")
-    location = soup.find_all(class_='companyLocation')
-    iter = 0
-    for i in names:
-        names[iter] = i.get_text()
-        location[iter] = location[iter].get_text()
-        iter += 1
+    )
+    names = [name.get_text() for name in soup.find_all(
+        class_="turnstileLink companyOverviewLink")]
+    location = [loc.get_text() for loc in soup.find_all(
+        class_='companyLocation')]
 
-    iter = 0
     job_ids = []
-    for i in jobs:
-        if names[iter] == company:
-            x = "https://in.indeed.com" + i.get("href")
+    links = []
+    to_pop = []
+    for i, job in enumerate(jobs):
+        if names[i] == company:
+            x = "https://in.indeed.com" + job.get("href")
             links.append(x)
-            job_ids.append(i.get("id"))
+            job_ids.append(job.get("id"))
         else:
-            names.pop(iter)
-        iter += 1
+            to_pop.append(i)
+    else:
+        for element in to_pop:
+            names.pop(element)
+    to_pop.clear()
+
     return names, job_ids, links, location
+
 
 def information(url):
     r = requests.get(url)
     soup = BeautifulSoup(r.content, "html5lib")
-    title = soup.find(class_='icl-u-xs-mb--xs icl-u-xs-mt--none jobsearch-JobInfoHeader-title').get_text()
-    desc = soup.find(class_='jobsearch-JobComponent-description icl-u-xs-mt--md').get_text()
-    job_posted = soup.find('span', class_='jobsearch-HiringInsights-entry--text').get_text()
-    company_link = soup.find(class_='icl-Button icl-Button--primary icl-Button--md icl-Button--block jobsearch-CallToApply-applyButton-newDesign')
+
+    title = soup.find(
+        class_='icl-u-xs-mb--xs icl-u-xs-mt--none jobsearch-JobInfoHeader-title').get_text()
+    desc = soup.find(
+        class_='jobsearch-JobComponent-description icl-u-xs-mt--md').get_text()
+    job_posted = soup.find(
+        'span', class_='jobsearch-HiringInsights-entry--text').get_text()
+    company_link = soup.find(
+        class_='icl-Button icl-Button--primary icl-Button--md icl-Button--block jobsearch-CallToApply-applyButton-newDesign')
     company_link = company_link.get('href')
-    return title,desc,job_posted, company_link
-    
+
+    return title, desc, job_posted, company_link
+
 
 if __name__ == "__main__":
+
+    # data = pd.read_csv('./data/organizations_restricted.csv', on_bad_lines='skip')
+
     company = "Microsoft"
     location = "Hyderabad"
     state = ""
@@ -98,7 +111,7 @@ if __name__ == "__main__":
     job_ids = []
     links = []
     location = []
-    prev_links = []
+    prev_links = ""
     for url in urls:
         r = requests.get(url)
         soup = BeautifulSoup(r.content, "html5lib")
@@ -115,15 +128,19 @@ if __name__ == "__main__":
             break
         prev_links = l
     remote = [i[0:6] == "Remote" for i in location]
+
     titles = []
     descriptions = []
     jobs_posted = []
     company_links = []
-    
+
     # t,d,j,l = information('https://in.indeed.com/viewjob?jk=5d809fcdeb50fdbe&from=serp&vjs=3')
-    for i in links:
-        t,d,j, l = information(i)
+    for i, link in enumerate(links):
+        t, d, j, l = information(link)
         titles.append(t)
         descriptions.append(d)
         jobs_posted.append(j)
         company_links.append(l)
+
+        print(
+            f"Link-{i+1}:\nTitle: {t}\nDescription: {len(d)}\nJob Postings: {j}\nCompany Link: {l}\n")
