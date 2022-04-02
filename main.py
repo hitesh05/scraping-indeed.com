@@ -6,15 +6,16 @@ from bs4 import BeautifulSoup
 '''
 Requirements:
 UUID: to be carried over
-Easy Apply: on US website. check how to do it
-Urgent hire: not on Indian website
-staffing agency: is there any way to find out?
-Location detail: figure out which companies have this
+
+staffing agency: is there any way to find out? cannot figure out.
+Location detail: figure out which companies have this.
 Keyword 1,2,3,4: ??
 Position count: ??
 
 Indeed firm id: no ID available
 
+Easy Apply: on US website. DONE
+Urgent hire: DONE
 firmname: DONE
 Indeed position id: DONE
 Job Title: DONE
@@ -35,7 +36,7 @@ Company link: DONE
 
 def get_link(company, location, state):
     links = []
-    for i in range(1):
+    for i in range(1): # is there any other way to check the number of pages?
         page = i
         link = (
             "https://in.indeed.com/jobs?q="
@@ -66,11 +67,15 @@ def get_links(soup, company):
     job_ids = []
     links = []
     to_pop = []
+    easy_apply = []
+    urgent_hire = []
     for i, job in enumerate(jobs):
         if names[i] == company:
             x = "https://in.indeed.com" + job.get("href")
             links.append(x)
             job_ids.append(job.get("id"))
+            easy_apply.append(job.find('span', class_='ialbl iaTextBlack') == True)
+            urgent_hire.append(job.find(class_='urgentlyHiring') == True)
         else:
             to_pop.append(i)
     else:
@@ -78,7 +83,7 @@ def get_links(soup, company):
             names.pop(element)
     to_pop.clear()
 
-    return names, job_ids, links, location
+    return names, job_ids, links, location, easy_apply, urgent_hire
 
 
 def information(url):
@@ -112,10 +117,12 @@ if __name__ == "__main__":
     links = []
     location = []
     prev_links = ""
+    easy_apply = []
+    urgent_hire = []
     for url in urls:
         r = requests.get(url)
         soup = BeautifulSoup(r.content, "html5lib")
-        n, j, l, loc = get_links(soup, company)
+        n, j, l, loc, easy, urgent = get_links(soup, company)
         for i in n:
             names.append(i)
         for i in j:
@@ -124,6 +131,10 @@ if __name__ == "__main__":
             links.append(i)
         for i in loc:
             location.append(i)
+        for i in easy:
+            easy_apply.append(i)
+        for i in urgent:
+            urgent_hire.append(i)
         if l == prev_links:
             break
         prev_links = l
