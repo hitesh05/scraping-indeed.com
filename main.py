@@ -1,7 +1,9 @@
+from time import sleep
 import pandas as pd
 import requests
 import html5lib
 from bs4 import BeautifulSoup
+import re
 
 '''
 Requirements:
@@ -36,10 +38,10 @@ Company link: DONE
 
 def get_link(company, location, state):
     links = []
-    for i in range(1): # is there any other way to check the number of pages?
+    for i in range(5): # is there any other way to check the number of pages?
         page = i
         link = (
-            "https://in.indeed.com/jobs?q="
+            "https://www.indeed.com/jobs?q="
             + company
             + "&l="
             + location
@@ -105,53 +107,81 @@ def information(url):
 
 if __name__ == "__main__":
 
-    # data = pd.read_csv('./data/organizations_restricted.csv', on_bad_lines='skip')
+    data = pd.read_csv('../organizations_restricted.csv', sep='\t', on_bad_lines='skip')
 
-    company = "Microsoft"
-    location = "Hyderabad"
+    # for col in data.columns:
+    #     print(col)
+
+    data['name'] = data['name'].apply(lambda x: re.sub('[^A-Za-z0-9\s]+','', str(x).lower()))
+
+    view1 = data[['name', 'city', 'region']]
+
+    companyies = data['name']
+    locations = data['city']
     state = ""
-    urls = get_link(company, location, state)
 
-    names = []
-    job_ids = []
-    links = []
-    location = []
-    prev_links = ""
-    easy_apply = []
-    urgent_hire = []
-    for url in urls:
-        r = requests.get(url)
-        soup = BeautifulSoup(r.content, "html5lib")
-        n, j, l, loc, easy, urgent = get_links(soup, company)
-        for i in n:
-            names.append(i)
-        for i in j:
-            job_ids.append(i)
-        for i in l:
-            links.append(i)
-        for i in loc:
-            location.append(i)
-        for i in easy:
-            easy_apply.append(i)
-        for i in urgent:
-            urgent_hire.append(i)
-        if l == prev_links:
+    for i, (company, location) in enumerate(zip(companyies, locations)):
+
+        if i > 4:
             break
-        prev_links = l
-    remote = [i[0:6] == "Remote" for i in location]
 
-    titles = []
-    descriptions = []
-    jobs_posted = []
-    company_links = []
+        company = 'Synergy'
+        location = ""
+        
+        print(f"Scraping for {company} in {location}")
+        urls = get_link(company, location, state)
+        print(urls)
 
-    # t,d,j,l = information('https://in.indeed.com/viewjob?jk=5d809fcdeb50fdbe&from=serp&vjs=3')
-    for i, link in enumerate(links):
-        t, d, j, l = information(link)
-        titles.append(t)
-        descriptions.append(d)
-        jobs_posted.append(j)
-        company_links.append(l)
+        names = []
+        job_ids = []
+        links = []
+        location = []
+        prev_links = ""
+        easy_apply = []
+        urgent_hire = []
+        for url in urls:
+            r = requests.get(url)
+            soup = BeautifulSoup(r.content, "html5lib")
+            try:
+                n, j, l, loc, easy, urgent = get_links(soup, company)
+            except:
+                print("get_links failed")
+            for i in n:
+                names.append(i)
+            for i in j:
+                job_ids.append(i)
+            for i in l:
+                links.append(i)
+            for i in loc:
+                location.append(i)
+            for i in easy:
+                easy_apply.append(i)
+            for i in urgent:
+                urgent_hire.append(i)
+            if l == prev_links:
+                break
+            prev_links = l
 
-        print(
-            f"Link-{i+1}:\nTitle: {t}\nDescription: {len(d)}\nJob Postings: {j}\nCompany Link: {l}\n")
+        if len(names) == 0:
+            print('Nothing here\n\n')
+            continue
+
+        remote = [i[0:6] == "Remote" for i in location]
+
+        titles = []
+        descriptions = []
+        jobs_posted = []
+        company_links = []
+
+        # t,d,j,l = information('https://in.indeed.com/viewjob?jk=5d809fcdeb50fdbe&from=serp&vjs=3')
+        for i, link in enumerate(links):
+            t, d, j, l = information(link)
+            titles.append(t)
+            descriptions.append(d)
+            jobs_posted.append(j)
+            company_links.append(l)
+
+            print(
+                f"Link-{i+1}:\nTitle: {t}\nDescription: {len(d)}\nJob Postings: {j}\nCompany Link: {l}\n")
+
+        sleep(10)
