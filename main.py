@@ -41,7 +41,7 @@ def get_link(company, location, state):
     for i in range(5): # is there any other way to check the number of pages?
         page = i
         link = (
-            "https://www.indeed.com/jobs?q="
+            "https://in.indeed.com/jobs?q="
             + company
             + "&l="
             + location
@@ -72,7 +72,7 @@ def get_links(soup, company):
     easy_apply = []
     urgent_hire = []
     for i, job in enumerate(jobs):
-        if names[i] == company:
+        if company.lower() in names[i].lower(): # change
             x = "https://in.indeed.com" + job.get("href")
             links.append(x)
             job_ids.append(job.get("id"))
@@ -85,6 +85,8 @@ def get_links(soup, company):
             names.pop(element)
     to_pop.clear()
 
+    # print("names", names)
+    # print("links", links)
     return names, job_ids, links, location, easy_apply, urgent_hire
 
 
@@ -116,19 +118,19 @@ if __name__ == "__main__":
 
     view1 = data[['name', 'city', 'region']]
 
-    companyies = data['name']
+    companies = data['name']
     locations = data['city']
     state = ""
 
-    for i, (company, location) in enumerate(zip(companyies, locations)):
+    for i, (company, location) in enumerate(zip(companies, locations)):
 
-        if i > 4:
+        if i > 3:
             break
-
-        company = 'Synergy'
-        location = ""
         
         print(f"Scraping for {company} in {location}")
+        
+        location = location.replace(" ","%20")
+        
         urls = get_link(company, location, state)
         print(urls)
 
@@ -144,23 +146,23 @@ if __name__ == "__main__":
             soup = BeautifulSoup(r.content, "html5lib")
             try:
                 n, j, l, loc, easy, urgent = get_links(soup, company)
+                for i in n:
+                    names.append(i)
+                    for i in j:
+                        job_ids.append(i)
+                    for i in l:
+                        links.append(i)
+                    for i in loc:
+                        location.append(i)
+                    for i in easy:
+                        easy_apply.append(i)
+                    for i in urgent:
+                        urgent_hire.append(i)
+                    if l == prev_links:
+                        break
+                    prev_links = l
             except:
                 print("get_links failed")
-            for i in n:
-                names.append(i)
-            for i in j:
-                job_ids.append(i)
-            for i in l:
-                links.append(i)
-            for i in loc:
-                location.append(i)
-            for i in easy:
-                easy_apply.append(i)
-            for i in urgent:
-                urgent_hire.append(i)
-            if l == prev_links:
-                break
-            prev_links = l
 
         if len(names) == 0:
             print('Nothing here\n\n')
@@ -182,6 +184,6 @@ if __name__ == "__main__":
             company_links.append(l)
 
             print(
-                f"Link-{i+1}:\nTitle: {t}\nDescription: {len(d)}\nJob Postings: {j}\nCompany Link: {l}\n")
+                f"Link-{i+1}:\nTitle: {t}\nDescription: {d}\nJob Postings: {j}\nCompany Link: {l}\n")
 
         sleep(10)
