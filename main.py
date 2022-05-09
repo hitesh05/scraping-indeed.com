@@ -4,6 +4,9 @@ import requests
 import html5lib
 from bs4 import BeautifulSoup
 import re
+import json
+import codecs
+from tqdm import tqdm
 
 '''
 Requirements:
@@ -35,13 +38,16 @@ Posted time: DONE
 Company link: DONE
 '''
 
+# global variables
+NO_OF_PAGES = 1
+
 
 def get_link(company, location, state):
     links = []
-    for i in range(5): # is there any other way to check the number of pages?
+    for i in range(NO_OF_PAGES):  # is there any other way to check the number of pages?
         page = i
         link = (
-            "https://in.indeed.com/jobs?q="
+            "https://www.indeed.com/jobs?q="
             + company
             + "&l="
             + location
@@ -58,7 +64,10 @@ def get_links(soup, company):
     jobs = soup.find_all(
         "a",
         attrs={
-            "class": lambda e: e.startswith("tapItem fs-unmask result") if e else False
+            # for companies in USA
+            "class": lambda e: e.startswith("jcs-JobTitle") if e else False
+            # for companies in India
+            # "class": lambda e: e.startswith("tapItem fs-unmask result") if e else False
         },
     )
     names = [name.get_text() for name in soup.find_all(
@@ -72,11 +81,12 @@ def get_links(soup, company):
     easy_apply = []
     urgent_hire = []
     for i, job in enumerate(jobs):
-        if company.lower() in names[i].lower(): # change
-            x = "https://in.indeed.com" + job.get("href")
+        if company.lower() in names[i].lower():  # change
+            x = "https://www.indeed.com" + job.get("href")
             links.append(x)
             job_ids.append(job.get("id"))
-            easy_apply.append(job.find('span', class_='ialbl iaTextBlack') == True)
+            easy_apply.append(
+                job.find('span', class_='ialbl iaTextBlack') == True)
             urgent_hire.append(job.find(class_='urgentlyHiring') == True)
         else:
             to_pop.append(i)
@@ -94,27 +104,44 @@ def information(url):
     r = requests.get(url)
     soup = BeautifulSoup(r.content, "html5lib")
 
-    title = soup.find(
-        class_='icl-u-xs-mb--xs icl-u-xs-mt--none jobsearch-JobInfoHeader-title').get_text()
-    desc = soup.find(
-        class_='jobsearch-JobComponent-description icl-u-xs-mt--md').get_text()
-    job_posted = soup.find(
-        'span', class_='jobsearch-HiringInsights-entry--text').get_text()
-    company_link = soup.find(
-        class_='icl-Button icl-Button--primary icl-Button--md icl-Button--block jobsearch-CallToApply-applyButton-newDesign')
-    company_link = company_link.get('href')
+    try:
+        title = soup.find(
+            class_='icl-u-xs-mb--xs icl-u-xs-mt--none jobsearch-JobInfoHeader-title').get_text()
+    except:
+        title = ''
+    try:
+        desc = soup.find(
+            class_='jobsearch-JobComponent-description icl-u-xs-mt--md').get_text()
+    except:
+        desc = ''
+    try:
+        job_posted = soup.find(
+            'span', class_='jobsearch-HiringInsights-entry--text').get_text()
+    except:
+        job_posted = ''
+    try:
+        company_link = soup.find(
+            class_='icl-Button icl-Button--primary icl-Button--md icl-Button--block jobsearch-CallToApply-applyButton-newDesign').get('href')
+    except:
+        company_link = ''
 
     return title, desc, job_posted, company_link
 
 
 if __name__ == "__main__":
 
-    data = pd.read_csv('../organizations_restricted.csv', sep='\t', on_bad_lines='skip')
+    # original data
+    # data = pd.read_csv('organizations_restricted.csv',
+    #                    sep='\t', on_bad_lines='skip')
+    # our data
+    data = pd.read_csv('organizations_restricted.csv',
+                       sep=',', on_bad_lines='skip')
 
     # for col in data.columns:
     #     print(col)
 
-    data['name'] = data['name'].apply(lambda x: re.sub('[^A-Za-z0-9\s]+','', str(x).lower()))
+    data['name'] = data['name'].apply(
+        lambda x: re.sub('[^A-Za-z0-9\s]+', '', str(x).lower()))
 
     view1 = data[['name', 'city', 'region']]
 
@@ -124,15 +151,11 @@ if __name__ == "__main__":
 
     for i, (company, location) in enumerate(zip(companies, locations)):
 
-        if i > 3:
-            break
-        
         print(f"Scraping for {company} in {location}")
-        
-        location = location.replace(" ","%20")
-        
+
+        location = location.replace(" ", "%20")
+
         urls = get_link(company, location, state)
-        print(urls)
 
         names = []
         job_ids = []
@@ -176,14 +199,28 @@ if __name__ == "__main__":
         company_links = []
 
         # t,d,j,l = information('https://in.indeed.com/viewjob?jk=5d809fcdeb50fdbe&from=serp&vjs=3')
-        for i, link in enumerate(links):
+        for i, link in tqdm(enumerate(links)):
+
             t, d, j, l = information(link)
             titles.append(t)
             descriptions.append(d)
             jobs_posted.append(j)
             company_links.append(l)
 
-            print(
-                f"Link-{i+1}:\nTitle: {t}\nDescription: {d}\nJob Postings: {j}\nCompany Link: {l}\n")
-
-        sleep(10)
+            final_data = {
+                'company': company,
+                'location': location[i],
+                'title': t,
+                'description': d,
+                'company_link': l,
+                'job_posted': jobs_posted[i],
+                'job_ids': job_ids[i],
+                'easy_apply': easy_apply[i],
+                'urgent_hire': urgent_hire[i]
+            }
+            with open('output.json', 'ab') as f:
+                json.dump(final_data, codecs.getwriter(
+                    'utf-8')(f), ensure_ascii=False)
+            with open('output.json', 'a') as f:
+                f.write(",\n")
+            # print(f"Link-{i+1}:\nTitle: {t}\nDescription: {d}\nJob Postings: {j}\nCompany Link: {l}\n")
