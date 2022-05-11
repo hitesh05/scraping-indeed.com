@@ -41,7 +41,7 @@ def get_link(company, location, state):
     for i in range(5): # is there any other way to check the number of pages?
         page = i
         link = (
-            "https://in.indeed.com/jobs?q="
+            "https://www.indeed.com/jobs?q="
             + company
             + "&l="
             + location
@@ -73,7 +73,7 @@ def get_links(soup, company):
     urgent_hire = []
     for i, job in enumerate(jobs):
         if company.lower() in names[i].lower(): # change
-            x = "https://in.indeed.com" + job.get("href")
+            x = "https://www.indeed.com" + job.get("href")
             links.append(x)
             job_ids.append(job.get("id"))
             easy_apply.append(job.find('span', class_='ialbl iaTextBlack') == True)
