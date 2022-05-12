@@ -1,6 +1,6 @@
-location = "Los Angeles"
-location = location.replace(" ","%20")
+uuid = 1
+job = 3
+me = 5
 
-
-print(location)
-    
+row = [uuid,job,me]
+print(row)

@@ -7,6 +7,7 @@ import re
 import json
 import codecs
 from tqdm import tqdm
+import csv
 
 '''
 Requirements:
@@ -145,12 +146,19 @@ if __name__ == "__main__":
 
     view1 = data[['name', 'city', 'region']]
 
+    uuid = data['uuid']
     companies = data['name']
     locations = data['city']
     state = ""
 
-    for i, (company, location) in enumerate(zip(companies, locations)):
+    filename = 'output.csv'
+    fields = ['uuid','company','location','title','description','company_link','job_posted','job_ids','easy_apply','urgent hire']
 
+    with open(filename,'w') as file:
+        writer = csv.writer(file)
+        writer.writerow(fields)
+
+    for i, (company, location) in enumerate(zip(companies, locations)):
         print(f"Scraping for {company} in {location}")
 
         location = location.replace(" ", "%20")
@@ -207,20 +215,27 @@ if __name__ == "__main__":
             jobs_posted.append(j)
             company_links.append(l)
 
-            final_data = {
-                'company': company,
-                'location': location[i],
-                'title': t,
-                'description': d,
-                'company_link': l,
-                'job_posted': jobs_posted[i],
-                'job_ids': job_ids[i],
-                'easy_apply': easy_apply[i],
-                'urgent_hire': urgent_hire[i]
-            }
-            with open('output.json', 'ab') as f:
-                json.dump(final_data, codecs.getwriter(
-                    'utf-8')(f), ensure_ascii=False)
-            with open('output.json', 'a') as f:
-                f.write(",\n")
+            row = [(uuid[i]),(company),(location[i]),(t),(d),(l),(jobs_posted[i]),(job_ids[i]),(easy_apply[i]),(urgent_hire[i])]
+
+            with open(filename,'a') as file:
+                writer = csv.writer(file)
+                writer.writerow(map(lambda x: [x], row))
+
+            # final_data = {
+            #     'uuid': uuid,
+            #     'company': company,
+            #     'location': location[i],
+            #     'title': t,
+            #     'description': d,
+            #     'company_link': l,
+            #     'job_posted': jobs_posted[i],
+            #     'job_ids': job_ids[i],
+            #     'easy_apply': easy_apply[i],
+            #     'urgent_hire': urgent_hire[i]
+            # }
+            # with open('output.json', 'ab') as f:
+            #     json.dump(final_data, codecs.getwriter(
+            #         'utf-8')(f), ensure_ascii=False)
+            # with open('output.json', 'a') as f:
+            #     f.write(",\n")
             # print(f"Link-{i+1}:\nTitle: {t}\nDescription: {d}\nJob Postings: {j}\nCompany Link: {l}\n")
