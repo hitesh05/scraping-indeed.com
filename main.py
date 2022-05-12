@@ -8,6 +8,7 @@ import json
 import codecs
 from tqdm import tqdm
 import csv
+from datetime import date
 
 '''
 Requirements:
@@ -40,7 +41,7 @@ Company link: DONE
 '''
 
 # global variables
-NO_OF_PAGES = 1
+NO_OF_PAGES = 10
 
 
 def get_link(company, location, state):
@@ -132,11 +133,11 @@ def information(url):
 if __name__ == "__main__":
 
     # original data
-    # data = pd.read_csv('organizations_restricted.csv',
-    #                    sep='\t', on_bad_lines='skip')
+    data = pd.read_csv('../organizations_restricted.csv',
+                       sep='\t', on_bad_lines='skip')
     # our data
-    data = pd.read_csv('organizations_restricted.csv',
-                       sep=',', on_bad_lines='skip')
+    # data = pd.read_csv('organizations_restricted.csv',
+    #                    sep=',', on_bad_lines='skip')
 
     # for col in data.columns:
     #     print(col)
@@ -150,6 +151,7 @@ if __name__ == "__main__":
     companies = data['name']
     locations = data['city']
     state = ""
+    country = data['country_code']
 
     filename = 'output.csv'
     fields = ['uuid','company','location','title','description','company_link','job_posted','job_ids','easy_apply','urgent hire']
@@ -158,7 +160,20 @@ if __name__ == "__main__":
         writer = csv.writer(file)
         writer.writerow(fields)
 
+    filename2 = 'progress.csv'
+    fields2 = ['uuid','company','crawl_date','num_jobs','downloaded']
+
+    with open(filename2,'w') as file2:
+        writer2 = csv.writer(file2)
+        writer2.writerow(fields2)
+
     for i, (company, location) in enumerate(zip(companies, locations)):
+        
+        if pd.isna(company) or pd.isna(location) or country[i] != "USA":
+            continue
+    
+        today = date.today()
+
         print(f"Scraping for {company} in {location}")
 
         location = location.replace(" ", "%20")
@@ -193,11 +208,8 @@ if __name__ == "__main__":
                         break
                     prev_links = l
             except:
-                print("get_links failed")
+                break
 
-        if len(names) == 0:
-            print('Nothing here\n\n')
-            continue
 
         remote = [i[0:6] == "Remote" for i in location]
 
@@ -205,6 +217,23 @@ if __name__ == "__main__":
         descriptions = []
         jobs_posted = []
         company_links = []
+
+        if len(names) == 0:
+            # print('Nothing here\n\n')
+            descriptions.append('Nothing Here')
+            row = [uuid[i],company,[],[],descriptions,[],[],[],[],[]]
+
+            d4 = today.strftime("%b-%d-%Y")
+            row2 = [uuid[i],company,d4,0,True]
+
+            with open(filename,'a') as file:
+                writer = csv.writer(file)
+                writer.writerow(map(lambda x: [x], row))
+
+            with open(filename2,'a') as file2:
+                writer2 = csv.writer(file2)
+                writer2.writerow(map(lambda x: [x], row2))
+            continue
 
         # t,d,j,l = information('https://in.indeed.com/viewjob?jk=5d809fcdeb50fdbe&from=serp&vjs=3')
         for i, link in tqdm(enumerate(links)):
@@ -215,27 +244,16 @@ if __name__ == "__main__":
             jobs_posted.append(j)
             company_links.append(l)
 
-            row = [(uuid[i]),(company),(location[i]),(t),(d),(l),(jobs_posted[i]),(job_ids[i]),(easy_apply[i]),(urgent_hire[i])]
+            row = [uuid[i],company,location[i],t,d,l,jobs_posted[i],job_ids[i],easy_apply[i],urgent_hire[i]]
 
             with open(filename,'a') as file:
                 writer = csv.writer(file)
                 writer.writerow(map(lambda x: [x], row))
 
-            # final_data = {
-            #     'uuid': uuid,
-            #     'company': company,
-            #     'location': location[i],
-            #     'title': t,
-            #     'description': d,
-            #     'company_link': l,
-            #     'job_posted': jobs_posted[i],
-            #     'job_ids': job_ids[i],
-            #     'easy_apply': easy_apply[i],
-            #     'urgent_hire': urgent_hire[i]
-            # }
-            # with open('output.json', 'ab') as f:
-            #     json.dump(final_data, codecs.getwriter(
-            #         'utf-8')(f), ensure_ascii=False)
-            # with open('output.json', 'a') as f:
-            #     f.write(",\n")
-            # print(f"Link-{i+1}:\nTitle: {t}\nDescription: {d}\nJob Postings: {j}\nCompany Link: {l}\n")
+            d4 = today.strftime("%b-%d-%Y")
+            row2 = [uuid[i],company,d4,len(names),True]
+            with open(filename2,'a') as file2:
+                writer2 = csv.writer(file2)
+                writer2.writerow(map(lambda x: [x], row2))
+
+            
