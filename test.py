@@ -73,7 +73,9 @@ https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Ma
 
 '''
 
-for i in range(5):
-    if i == 1:
-        continue
-    print(i)
+def fun():
+    return '','','',False
+
+a,b,c,d = fun()
+print(a)
+print(d)

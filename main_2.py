@@ -31,22 +31,22 @@ def get_link():
         'https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Dallas%2C%20TX&radius=100&jt=fulltime&explvl=mid_level&sr=directhire',
         'https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Newport%20News%2C%20VA&radius=100&jt=fulltime&explvl=mid_level&sr=directhire',
         'https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Denver%2C%20CO&radius=100&jt=fulltime&explvl=mid_level&sr=directhire',
-        'https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Seattle%2C%20WA&radius=100&jt=fulltime&explvl=mid_level&sr=directhire',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Miami%2C%20FL&radius=100&jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Philadelphia%2C%20PA&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Durham%2C%20NC&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Boulder%2C%20CO&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Pittsburgh%2C%20PA&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Dallas%2C%20TX&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Huston%2C%20PA&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=New%20Jersey&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Detroit%2C%20MI&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Minneapolis%2C%20MN&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=%28executive%20or%20Manager%20or%20Product%20or%20Market%29%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=St.%20Louis%2C%20MO&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=%28executive%20or%20Manager%20or%20Product%20or%20Market%29%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Indianapolis%2C%20IN&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Milwaukee%2C%20WI&radius=100jt=fulltime&explvl=mid_level',
-        'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Salt%20Lake%20City%2C%20UT&radius=100jt=fulltime&explvl=mid_level'
+        'https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Seattle%2C%20WA&radius=100&jt=fulltime&explvl=mid_level&sr=directhire'
     ]
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Miami%2C%20FL&radius=100&jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Philadelphia%2C%20PA&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Durham%2C%20NC&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Boulder%2C%20CO&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Pittsburgh%2C%20PA&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Dallas%2C%20TX&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Huston%2C%20PA&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=New%20Jersey&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Detroit%2C%20MI&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Minneapolis%2C%20MN&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=%28executive%20or%20Manager%20or%20Product%20or%20Market%29%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=St.%20Louis%2C%20MO&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=%28executive%20or%20Manager%20or%20Product%20or%20Market%29%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Indianapolis%2C%20IN&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Milwaukee%2C%20WI&radius=100jt=fulltime&explvl=mid_level',
+        # 'https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Salt%20Lake%20City%2C%20UT&radius=100jt=fulltime&explvl=mid_level'
 
     # links = [
     #     'https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Remote&jlid=aaa2b906602aa8f5&explvl=mid_level&sr=directhire&vjk=83e733840e65ba52'
@@ -104,8 +104,11 @@ def get_links(soup):
 
 
 def information(url):
-    r = requests.get(url)
-    soup = BeautifulSoup(r.content, "html5lib")
+    try:
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content, "html5lib")
+    except:
+        return '','','','','',False
 
     try:
         title = soup.find(
@@ -135,8 +138,7 @@ def information(url):
     try:
         apply = soup.find(
             'a', class_='icl-Button icl-Button--primary icl-Button--md icl-Button--block jobsearch-CallToApply-applyButton-newDesign').get_text()
-        apply_comp = apply.lower() == "apply on company site"
-        
+        apply_comp = apply.lower() == "apply on company site"        
     except:
         apply_comp = False
 
