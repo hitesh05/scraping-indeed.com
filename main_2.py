@@ -206,6 +206,7 @@ if __name__ == "__main__":
     apply_comps = []
 
     # print('here 2')
+    print(links)
 
     for i, link in enumerate(links):
         # print('here 3')
