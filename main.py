@@ -1,18 +1,16 @@
+#!/usr/bin/env python3
+
 from time import sleep
 import pandas as pd
 import requests
 import html5lib
 from bs4 import BeautifulSoup
 import re
-import json
-import codecs
-from tqdm import tqdm
 import csv
 from datetime import date
 
 '''
 Requirements:
-UUID: to be carried over
 
 staffing agency: is there any way to find out? cannot figure out.
 Location detail: figure out which companies have this.
@@ -21,6 +19,7 @@ Position count: ??
 
 Indeed firm id: no ID available
 
+UUID: DONE
 Easy Apply: on US website. DONE
 Urgent hire: DONE
 firmname: DONE
@@ -41,12 +40,13 @@ Company link: DONE
 '''
 
 # global variables
-NO_OF_PAGES = 10
+NO_OF_PAGES = 1000
+SCRAPED = 0
 
 
 def get_link(company, location, state):
     links = []
-    for i in range(NO_OF_PAGES):  # is there any other way to check the number of pages?
+    for i in range(NO_OF_PAGES):
         page = i
         link = (
             "https://www.indeed.com/jobs?q="
@@ -72,6 +72,9 @@ def get_links(soup, company):
             # "class": lambda e: e.startswith("tapItem fs-unmask result") if e else False
         },
     )
+    
+    # for job in jobs:
+    #     print('here')
     names = [name.get_text() for name in soup.find_all(
         class_="turnstileLink companyOverviewLink")]
     location = [loc.get_text() for loc in soup.find_all(
@@ -97,8 +100,6 @@ def get_links(soup, company):
             names.pop(element)
     to_pop.clear()
 
-    # print("names", names)
-    # print("links", links)
     return names, job_ids, links, location, easy_apply, urgent_hire
 
 
@@ -139,9 +140,6 @@ if __name__ == "__main__":
     # data = pd.read_csv('organizations_restricted.csv',
     #                    sep=',', on_bad_lines='skip')
 
-    # for col in data.columns:
-    #     print(col)
-
     data['name'] = data['name'].apply(
         lambda x: re.sub('[^A-Za-z0-9\s]+', '', str(x).lower()))
 
@@ -154,20 +152,24 @@ if __name__ == "__main__":
     country = data['country_code']
 
     filename = 'output.csv'
-    fields = ['uuid','company','location','title','description','company_link','job_posted','job_ids','easy_apply','urgent hire']
-
-    with open(filename,'w') as file:
-        writer = csv.writer(file)
-        writer.writerow(fields)
-
     filename2 = 'progress.csv'
-    fields2 = ['uuid','company','crawl_date','num_jobs','downloaded']
+    
+    if SCRAPED == 0 :
+        # write to file
+        fields = ['uuid','company','location','title','description','company_link','job_posted','job_ids','easy_apply','urgent hire']
+        with open(filename,'w') as file:
+            writer = csv.writer(file)
+            writer.writerow(fields)
 
-    with open(filename2,'w') as file2:
-        writer2 = csv.writer(file2)
-        writer2.writerow(fields2)
+        fields2 = ['uuid','company','crawl_date','num_jobs','downloaded']
+        with open(filename2,'w') as file2:
+            writer2 = csv.writer(file2)
+            writer2.writerow(fields2)
 
     for i, (company, location) in enumerate(zip(companies, locations)):
+
+        if i < SCRAPED:
+            continue
         
         if pd.isna(company) or pd.isna(location) or country[i] != "USA":
             continue
@@ -194,19 +196,19 @@ if __name__ == "__main__":
                 n, j, l, loc, easy, urgent = get_links(soup, company)
                 for i in n:
                     names.append(i)
-                    for i in j:
-                        job_ids.append(i)
-                    for i in l:
-                        links.append(i)
-                    for i in loc:
-                        location.append(i)
-                    for i in easy:
-                        easy_apply.append(i)
-                    for i in urgent:
-                        urgent_hire.append(i)
-                    if l == prev_links:
-                        break
-                    prev_links = l
+                for i in j:
+                    job_ids.append(i)
+                for i in l:
+                    links.append(i)
+                for i in loc:
+                    location.append(i)
+                for i in easy:
+                    easy_apply.append(i)
+                for i in urgent:
+                    urgent_hire.append(i)
+                if l == prev_links:
+                    break
+                prev_links = l
             except:
                 break
 
@@ -226,6 +228,7 @@ if __name__ == "__main__":
             d4 = today.strftime("%b-%d-%Y")
             row2 = [uuid[i],company,d4,0,True]
 
+            # write to file
             with open(filename,'a') as file:
                 writer = csv.writer(file)
                 writer.writerow(map(lambda x: [x], row))
@@ -236,7 +239,7 @@ if __name__ == "__main__":
             continue
 
         # t,d,j,l = information('https://in.indeed.com/viewjob?jk=5d809fcdeb50fdbe&from=serp&vjs=3')
-        for i, link in tqdm(enumerate(links)):
+        for i, link in enumerate(links):
 
             t, d, j, l = information(link)
             titles.append(t)
@@ -246,6 +249,7 @@ if __name__ == "__main__":
 
             row = [uuid[i],company,location[i],t,d,l,jobs_posted[i],job_ids[i],easy_apply[i],urgent_hire[i]]
 
+            # write to file
             with open(filename,'a') as file:
                 writer = csv.writer(file)
                 writer.writerow(map(lambda x: [x], row))
