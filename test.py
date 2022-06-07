@@ -1,81 +1,166 @@
+import enum
 from itertools import count
 import pandas as pd
+import csv
+import re
 
-# data = pd.read_csv('../organizations_restricted.csv',
-#                        sep='\t', on_bad_lines='skip')
+# editing output.csv file
 
-# companies = data['name']
-# locations = data['city']
-# country = data['country_code']
-# print(country.value_counts().to_string())
+# filename = 'out_final2.csv'
+# data = pd.read_csv('output.csv',sep=',',on_bad_lines='skip')
+# fields = ['Job Title','location','Company Name','description','company_link','job_posted','job_ids','easy_apply','urgent hire','salary','remote','crawl_date','apply_comp']
+# with open(filename,'w') as file:
+#     writer = csv.writer(file)
+#     writer.writerow(fields)
+# for i in data.values:
+#     row = []
+#     for j in range(len(i)):
+#         # i[j] = i[j][2:-2]
+#         if j == 2 and str(i[j][-9:-2]).lower() == "reviews":
+#             i[j] = i[j][:-10]
+#             i[j] += "']"
+#         row.append(i[j])
+#     with open(filename,'a') as file:
+#             writer = csv.writer(file)
+#             writer.writerow(map(lambda x: x, row))
 
-# x = 0
-# for i, (company, location) in enumerate(zip(companies, locations)):
-#     if country[i] == "CAN":
-#         x += 1
+
+# replacing faulty entries from companies.csv:
+
+# df = pd.read_csv('companies.csv')
+
+# for i,j in enumerate(df['num_jobs']):
+#     if j == "['']":
+#         df.loc[i, 'num_jobs'] = ['']
+#     else:
+#         b = 0
+#         for x,y in enumerate(j):
+#             if y == '}':
+#                 b = x
+#         b+=1
+#         df.loc[i, 'num_jobs'] = [j[b:-2]]
         
-# print(x)
-
-# check.py:
-
-# df = pd.read_csv('progress.csv',sep=',')
-# jobs = df['num_jobs']
-# names = df['company']
-# x = 0
-# y = 0
-
-# hits = set()
-
-# for i in jobs:
-#     y += 1
-#     job = int(i[1])
-#     if job > 0:
-#         x += 1
-#         hits.add(names[y-1])
+# for i,j in enumerate(df['name']):
+#     j = j[2:-2]
+#     j = re.sub('\s','-',j)
+#     j = re.sub('.com','',j)
+#     j = re.sub('[0-9]','',j)
+#     j = re.sub(',','',j)
+#     df.loc[i,'name'] = [j]
         
-# print(x)
-# print(hits)
+# for i,j in enumerate(df['salary']):
+#     if j == "['']":
+#         df.loc[i, 'salary'] = ['']
+#     else:
+#         b = 0
+#         for x,y in enumerate(j):
+#             if y == '}':
+#                 b = x
+#         b+=1
+#         df.loc[i, 'salary'] = [j[b:-2]]
 
-# df = pd.read_csv('output.csv',sep=',')
-# desc = df['description']
-# x = 0
+# for i,j in enumerate(df['industry']):
+#     a = ['1','2','3','4','5','6','7','8','9','0','$']
+#     for x in a:
+#         if x in j:
+#             df.loc[i,'industry'] = ['']
+#             break
 
-# for i in desc:
-#     x+=1
-#     if i[3:-3]!="Nothing Here":
-#         print(df.iloc[x])
-#         break
-# print(desc[1][3:-3]=="Nothing Here")
+# a = ['Unnamed: 21']
+# for i in range(22,50):
+#     s = a[0][:-2]
+#     s += str(i)
+#     a.append(s)
 
-# https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&l=New%20York&radius=100&explvl=mid_level&sr=directhire&start=10000&vjk=c7cf8a8af979a5a1
+# for i in range(len(a)):
+#     df.drop(a[i], inplace=True, axis=1)  
+# df.to_csv('companies.csv', index=False)
 
-'''
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Remote&jlid=aaa2b906602aa8f5&explvl=mid_level&sr=directhire&vjk=6295bc9b38a2ef0d
-https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=New%20York%2C%20NY&radius=100&jt=fulltime&explvl=mid_level&start=1000
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Chicago%2C%20IL&jlid=402d6ad50e16c894&explvl=mid_level&sr=directhire&vjk=793a53a518c026b9
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Los%20Angeles%2C%20CA&jlid=d05a4fe50c5af0a8&explvl=mid_level&sr=directhire&vjk=28afa64fdfcbee30
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=San%20Francisco%2C%20CA&jlid=6cf5e6d389fd6d6b&explvl=mid_level&sr=directhire&vjk=006f204d6f954146
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Austin%2C%20TX&jlid=d2a39b6d57d82344&explvl=mid_level&sr=directhire&vjk=3a4e50cfa86001ed
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Houston%2C%20TX&jlid=fcd454bec6232f93&explvl=mid_level&sr=directhire&vjk=f05f90d09424a1d2
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Atlanta%2C%20GA&jlid=966e6327a98f7e81&explvl=mid_level&sr=directhire&vjk=a801c770874acaa0
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Washington%2C%20DC&jlid=c08ec92d8c031faa&explvl=mid_level&sr=directhire&vjk=0d90b58a18493590
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Boston%2C%20MA&jlid=e167aeb8a259bcac&explvl=mid_level&sr=directhire&vjk=a3fd742174ca4480
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Dallas%2C%20TX&jlid=c9b29a6e6a9f190c&explvl=mid_level&sr=directhire&vjk=c4d700d2f35070b8
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Newport%20News%2C%20VA&jlid=a8cc372befad335e&explvl=mid_level&sr=directhire&vjk=35a28efe70c54d7a
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Denver%2C%20CO&jlid=3ff9c6509d39a5e5&explvl=mid_level&sr=directhire&vjk=0e821b03f26d77ef
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Seattle%2C%20WA&jlid=1e8a7dce52945215&explvl=mid_level&sr=directhire&vjk=e9a20f34bae78184
-https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Miami%2C%20FL&radius=100&jt=fulltime&explvl=mid_level&vjk=b92bc83421297329
-https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Philadelphia%2C%20PA&radius=100jt=fulltime&explvl=mid_level&vjk=0a923e3fb4074f9c
-https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Durham%2C%20NC&radius=100jt=fulltime&explvl=mid_level&start=1000
-https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=Boulder%2C%20CO&radius=100jt=fulltime&explvl=mid_level&vjk=ed71218f9ef421b2
-https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&explvl=mid_level&sr=directhire&start=10&vjk=a801c770874acaa0
-https://www.indeed.com/jobs?q=(executive%20or%20Manager%20or%20Product%20or%20Market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-it%20%2450%2C000%2B&l=New%20York%2C%20NY&radius=100&jt=fulltime&explvl=mid_level&fromage=7&start=1000
 
-'''
+# making changes to out_final:
 
-def fun():
-    return '','','',False
+# df = pd.read_csv('out_final2.csv')
 
-a,b,c,d = fun()
-print(a)
-print(d)
+# for i,j in enumerate(df['Company Name']):
+#     j = re.sub('.com','',j)
+#     j = re.sub('[0-9]','',j)
+#     j = re.sub(',','',j)
+#     df.loc[i,'Company Name'] = j
+
+# df.drop('easy_apply', inplace=True, axis=1)
+# df.drop('urgent hire', inplace=True, axis=1)
+    
+# df.to_csv('out_final2.csv', index = False)
+
+# filename1 = 'reviews1.csv'
+# filename2 = 'reviews2.csv'
+# filename3 = 'reviews3.csv'
+# filename4 = 'reviews4.csv'
+
+# x = "review_"
+# row1 = []
+# row1.append("Company Name")
+# row2 = []
+# row2.append("Company Name")
+# row3 = []   
+# row3.append("Company Name")
+# row4 = []
+# row4.append("Company Name")
+
+# for i in range(1,101):
+#     y = x + str(i)
+#     row1.append(y)
+    
+# with open(filename1,'a') as file:
+#     writer = csv.writer(file)
+#     writer.writerow(map(lambda x: x, row1))
+    
+# for i in range(1,501):
+#     y = x + str(i)
+#     row2.append(y)
+    
+# with open(filename2,'a') as file:
+#     writer = csv.writer(file)
+#     writer.writerow(map(lambda x: [x], row2))
+    
+# for i in range(1,1001):
+#     y = x + str(i)
+#     row3.append(y)
+    
+# with open(filename3,'a') as file:
+#     writer = csv.writer(file)
+#     writer.writerow(map(lambda x: [x], row3))
+    
+# for i in range(1,2001):
+#     y = x + str(i)
+#     row4.append(y)
+    
+# with open(filename4,'a') as file:
+#     writer = csv.writer(file)
+#     writer.writerow(map(lambda x: [x], row4))
+
+# df1 = pd.read_csv('reviews1.csv')
+# names1 = list(df1['Company Name'])
+
+# df2 = pd.read_csv('companies.csv')
+# names2 = list(df2['name'])
+
+# for i,j in enumerate(names1):
+#     j = j[2:-2]
+#     j = j.lower()
+#     j = re.sub('-', ' ', j)
+#     names1[i] = j
+    
+# for i,j in enumerate(names2):
+#     j = j[2:-2]
+#     j = j.lower()
+#     j = re.sub('-', ' ', j)
+#     names2[i] = j
+# print(len(names2))
+    
+# for i in names1:
+#     if i not in names2:
+#         names2.append(i)
+        
+# print(len(names2))
+         

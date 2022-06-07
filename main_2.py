@@ -13,7 +13,7 @@ from datetime import date
 # global variables
 NO_OF_PAGES_START = 1
 NO_OF_PAGES_END = 100
-SCRAPED = 0
+SCRAPED = 1
 
 
 def get_link():
@@ -52,7 +52,7 @@ def get_link():
     #     'https://www.indeed.com/jobs?q=(executive%20or%20manager%20or%20product%20or%20market)%20-assistant%20-associate%20-junior%20-analyst%20-architect%20-engineer%20-scientist%20-representative%20-researcher%20-teacher%20-accounting%20-IT%20%2450%2C000%2B&rbl=Remote&jlid=aaa2b906602aa8f5&explvl=mid_level&sr=directhire&vjk=83e733840e65ba52'
     # ]
     
-    for l in range(len(links)):
+    for l in range(13,14):
         for i in range(NO_OF_PAGES_START, NO_OF_PAGES_END+1):
             page = i
             link = (
@@ -99,7 +99,6 @@ def get_links(soup):
         urgent_hire.append(job.find(class_='urgentlyHiring') == True)
 
     print('len of names', len(names))
-    print('len of links', len(links))
     return names, job_ids, links, location, easy_apply, urgent_hire
 
 
@@ -192,6 +191,7 @@ if __name__ == "__main__":
             for i in urgent:
                 urgent_hire.append(i)
             prev_links = l
+            # sleep(10)
         except:
             pass
 
@@ -206,7 +206,7 @@ if __name__ == "__main__":
     apply_comps = []
 
     # print('here 2')
-    print(links)
+    # print(links)
 
     for i, link in enumerate(links):
         # print('here 3')
@@ -226,3 +226,4 @@ if __name__ == "__main__":
         with open(filename,'a') as file:
             writer = csv.writer(file)
             writer.writerow(map(lambda x: [x], row))
+        # sleep(10)

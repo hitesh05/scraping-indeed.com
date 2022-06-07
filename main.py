@@ -45,6 +45,7 @@ SCRAPED = 0
 
 
 def get_link(company, location, state):
+    
     links = []
     for i in range(NO_OF_PAGES):
         page = i
