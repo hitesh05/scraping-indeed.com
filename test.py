@@ -23,11 +23,23 @@ import re
 #     with open(filename,'a') as file:
 #             writer = csv.writer(file)
 #             writer.writerow(map(lambda x: x, row))
+            
+# df = pd.read_csv('out_final2.csv')
+
+# for i,j in enumerate(df['Company Name']):
+#     j = re.sub('.com','',j)
+#     j = re.sub('[0-9]','',j)
+#     j = re.sub(',','',j)
+#     df.loc[i,'Company Name'] = j
+# df.drop('easy_apply', inplace=True, axis=1)
+# df.drop('urgent hire', inplace=True, axis=1)
+# df.to_csv('out_final2.csv', index = False)
 
 
 # replacing faulty entries from companies.csv:
 
 # df = pd.read_csv('companies.csv')
+# df2 = pd.DataFrame()
 
 # for i,j in enumerate(df['num_jobs']):
 #     if j == "['']":
@@ -39,14 +51,20 @@ import re
 #                 b = x
 #         b+=1
 #         df.loc[i, 'num_jobs'] = [j[b:-2]]
-        
+
+# x = 0 
 # for i,j in enumerate(df['name']):
 #     j = j[2:-2]
-#     j = re.sub('\s','-',j)
-#     j = re.sub('.com','',j)
-#     j = re.sub('[0-9]','',j)
-#     j = re.sub(',','',j)
-#     df.loc[i,'name'] = [j]
+#     if j == '':
+#         df.drop(df.index[x], inplace=True)
+#     else:
+#         x+=1
+    
+    # j = re.sub('\s','-',j)
+    # j = re.sub('.com','',j)
+    # j = re.sub('[0-9]','',j)
+    # j = re.sub(',','',j)
+    # df.loc[i,'name'] = [j]
         
 # for i,j in enumerate(df['salary']):
 #     if j == "['']":
@@ -65,6 +83,7 @@ import re
 #         if x in j:
 #             df.loc[i,'industry'] = ['']
 #             break
+      
 
 # a = ['Unnamed: 21']
 # for i in range(22,50):
@@ -79,7 +98,7 @@ import re
 
 # making changes to out_final:
 
-# df = pd.read_csv('out_final2.csv')
+# df = pd.read_csv('out_final.csv')
 
 # for i,j in enumerate(df['Company Name']):
 #     j = re.sub('.com','',j)
@@ -163,4 +182,3 @@ import re
 #         names2.append(i)
         
 # print(len(names2))
-         

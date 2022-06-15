@@ -12,8 +12,8 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 
 NO_OF_PAGES = 100
-START = 9000
-END = 9210
+START = 9210
+END = 12281
 
 filename1 = 'reviews1.csv'
 filename2 = 'reviews2.csv'
@@ -87,7 +87,7 @@ def review(ans):
             
     return reviews
 
-data = pd.read_csv('out_final.csv', sep=',', on_bad_lines='skip')
+data = pd.read_csv('../out_final.csv', sep=',', on_bad_lines='skip')
 names = data['Company Name']
 links = get_links(names)
     
@@ -117,5 +117,4 @@ for i, link in enumerate(links):
                 writer = csv.writer(file)
                 writer.writerow(map(lambda x: [x], row))
         print('here', i)
-        sleep(1)
         

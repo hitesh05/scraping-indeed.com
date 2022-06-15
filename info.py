@@ -34,9 +34,9 @@ company id
 headquarter location - ???
 '''
 
-SCRAPED = 1
-START = 2950
-END = 9210
+SCRAPED = 0
+START = 9210
+END = 12280
 S=Service(ChromeDriverManager().install())
 DRIVER = webdriver.Chrome(service=S)
 
@@ -173,11 +173,18 @@ def information(url):
         
 
 # if __name__ == "main":
-data = pd.read_csv('out_final.csv', sep=',', on_bad_lines='skip')
+data2 = pd.read_csv('out_final.csv', sep=',', on_bad_lines='skip')
+names2 = data2['Company Name']
+data = pd.read_csv('out_final2.csv', sep=',', on_bad_lines='skip')
 names = data['Company Name']
-links = get_links(names)
-# print('here1')
+names3 = []
+for i in names2:
+    names3.append(i)
+for i in names:
+    names3.append(i)
+links = get_links(names3)
 print(len(links))
+# quit()
 
 filename = 'companies.csv'
 
