@@ -35,8 +35,8 @@ headquarter location - ???
 '''
 
 SCRAPED = 0
-START = 9210
-END = 12280
+START = 32165
+END = 34276
 S=Service(ChromeDriverManager().install())
 DRIVER = webdriver.Chrome(service=S)
 
@@ -173,17 +173,19 @@ def information(url):
         
 
 # if __name__ == "main":
-data2 = pd.read_csv('out_final.csv', sep=',', on_bad_lines='skip')
+data2 = pd.read_csv('../out_final.csv', sep=',', on_bad_lines='skip')
 names2 = data2['Company Name']
-data = pd.read_csv('out_final2.csv', sep=',', on_bad_lines='skip')
-names = data['Company Name']
-names3 = []
-for i in names2:
-    names3.append(i)
-for i in names:
-    names3.append(i)
-links = get_links(names3)
-print(len(links))
+# print(len(names2))
+# data = pd.read_csv('out_final2.csv', sep=',', on_bad_lines='skip')
+# names = data['Company Name']
+# names3 = []
+# for i in names2:
+#     names3.append(i)
+# for i in names:
+#     names3.append(i)
+# print(len(names3))
+links = get_links(names2)
+# print(len(links))
 # quit()
 
 filename = 'companies.csv'
@@ -207,4 +209,4 @@ for i,j in enumerate(links):
         with open(filename,'a') as file:
             writer = csv.writer(file)
             writer.writerow(map(lambda x: [x], row))
-        sleep(1)
+        # sleep(1)
