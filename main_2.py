@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import enum
-from lib2to3.pgen2 import driver
 from time import sleep
 from unicodedata import name
 import pandas as pd
@@ -120,7 +119,7 @@ def get_links(url):
 
     job_ids = []
     links = []
-    salaries = []
+    # salaries = []
     
     for link in DRIVER.find_elements(By.XPATH, '//a[starts-with(@class,"jcs-JobTitle")]'):
         try:
@@ -136,14 +135,14 @@ def get_links(url):
             id = ''
         job_ids.append(id)
         
-    try:
-        s = DRIVER.find_elements(By.CLASS_NAME,"resultContent")
-        for i in s:
-            salaries.append(i.text)
-    except:
-        salaries = []
+    # try:
+    #     s = DRIVER.find_elements(By.CLASS_NAME,"resultContent")
+    #     for i in s:
+    #         salaries.append(i.text)
+    # except:
+    #     salaries = []
           
-    return names, job_ids, links, location, salaries
+    return names, job_ids, links, location
 
 
 def information(url):
@@ -152,10 +151,10 @@ def information(url):
         # soup = BeautifulSoup(r.content, "html5lib") 
         DRIVER.get(url)
     except:
-        return '','','','','',False
+        return '','','','','',False, ''
 
     try:
-        title = DRIVER.find_element(By.CLASS_NAME, 'jobsearch-InlineCompanyRating icl-u-xs-mt--xs jobsearch-DesktopStickyContainer-companyrating').text
+        title = DRIVER.find_element(By.XPATH, '//div[@class="jobsearch-InlineCompanyRating icl-u-xs-mt--xs jobsearch-DesktopStickyContainer-companyrating"]').text
         # title = soup.find(
         #     class_='jobsearch-InlineCompanyRating icl-u-xs-mt--xs jobsearch-DesktopStickyContainer-companyrating').get_text()
     except:
@@ -191,12 +190,17 @@ def information(url):
         apply_comp = apply.lower() == "apply on company site"        
     except:
         apply_comp = False
+    
+    try:
+        salary3 = DRIVER.find_element(By.CLASS_NAME, "css-1lyr5hv eu4oa1w0").text
+    except:
+        salary3 = ''
         
     # print(title,desc,job_posted,company_link,salary,apply_comp)
     # DRIVER.quit()
     # quit()
 
-    return title, desc, job_posted, company_link, salary, apply_comp
+    return title, desc, job_posted, company_link, salary, apply_comp, salary3
 
 
 if __name__ == "__main__":
@@ -224,15 +228,15 @@ if __name__ == "__main__":
     # easy_apply = []
     # urgent_hire = []
     x = 0
-    # for url in range(len(urls)):
-    for url in range(1):
+    for url in range(len(urls)):
+    # for url in range(1):
         x+=1
         # try:
         #     r = requests.get(urls[url])
         #     soup = BeautifulSoup(r.content, "html5lib")
         # except:
         #     continue
-        n, j, l, loc, s = get_links(urls[url])
+        n, j, l, loc= get_links(urls[url])
         print(x)
         try:
             if l == prev_links:
@@ -246,8 +250,8 @@ if __name__ == "__main__":
                 links.append(i)
             for i in loc:
                 location.append(i)
-            for i in s:
-                salary3.append(i)
+            # for i in s:
+            #     salary3.append(i)
             prev_links = l
         except:
             pass
@@ -260,16 +264,18 @@ if __name__ == "__main__":
     company_links = []
     salaries = []
     apply_comps = []
+    salary3 = []
 
     for i, link in enumerate(links):
         # print('here 3')
-        t, d, j, l, s, a = information(link)
+        t, d, j, l, s, a, s3 = information(link)
         titles.append(t)
         descriptions.append(d)
         jobs_posted.append(j)
         company_links.append(l)
         salaries.append(s)
         apply_comps.append(a)
+        salary3.append(s3)
 
         d4 = today.strftime("%b-%d-%Y")
         row = [names[i],location[i],t,d,l,j,job_ids[i],s,remote[i],d4,a,salary3[i]]

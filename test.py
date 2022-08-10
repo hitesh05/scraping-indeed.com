@@ -8,6 +8,7 @@ import re
 
 # filename = 'out_final2.csv'
 # data = pd.read_csv('output.csv',sep=',',on_bad_lines='skip')
+    
 # fields = ['Job Title','location','Company Name','description','company_link','job_posted','job_ids','easy_apply','urgent hire','salary','remote','crawl_date','apply_comp']
 # with open(filename,'w') as file:
 #     writer = csv.writer(file)
@@ -44,24 +45,24 @@ import re
 df = pd.read_csv('companies.csv')
 df2 = pd.DataFrame()
 
-for i,j in enumerate(df['num_jobs']):
-    if j == "['']":
-        df.loc[i, 'num_jobs'] = ['']
-    else:
-        b = 0
-        for x,y in enumerate(j):
-            if y == '}':
-                b = x
-        b+=1
-        df.loc[i, 'num_jobs'] = [j[b:-2]]
-
-# x = 0 
-# y=0
-# for i,j in enumerate(df['name']):
+# for i,j in enumerate(df['num_jobs']):
 #     if j == "['']":
-#         df.drop(df.index[x], inplace=True)
+#         df.loc[i, 'num_jobs'] = ['']
 #     else:
-#         x+=1
+#         b = 0
+#         for x,y in enumerate(j):
+#             if y == '}':
+#                 b = x
+#         b+=1
+#         df.loc[i, 'num_jobs'] = [j[b:-2]]
+
+x = 0 
+y=0
+for i,j in enumerate(df['name']):
+    if j == "['']":
+        df.drop(df.index[x], inplace=True)
+    else:
+        x+=1
     
 #     j = re.sub('\s','-',j)
 #     j = re.sub('.com','',j)
@@ -69,23 +70,23 @@ for i,j in enumerate(df['num_jobs']):
 #     j = re.sub(',','',j)
 #     df.loc[i,'name'] = [j]
         
-for i,j in enumerate(df['salary']):
-    j = str(j)
-    if j == "['']":
-        df.loc[i, 'salary'] = ['']
-    else:
-        b = 0
-        for x,y in enumerate(j):
-            if y == '}':
-                b = x
-        b+=1
-        df.loc[i, 'salary'] = [j[b:-2]]
+# for i,j in enumerate(df['salary']):
+#     j = str(j)
+#     if j == "['']":
+#         df.loc[i, 'salary'] = ['']
+#     else:
+#         b = 0
+#         for x,y in enumerate(j):
+#             if y == '}':
+#                 b = x
+#         b+=1
+#         df.loc[i, 'salary'] = [j[b:-2]]
 
-for i,j in enumerate(df['industry']):
-    a = ['1','2','3','4','5','6','7','8','9','0','$']
-    for x in a:
-        if x in str(j):
-            df.loc[i,'industry'] = ['']
-            break
+# for i,j in enumerate(df['industry']):
+#     a = ['1','2','3','4','5','6','7','8','9','0','$']
+#     for x in a:
+#         if x in str(j):
+#             df.loc[i,'industry'] = ['']
+#             break
       
 df.to_csv('companies.csv', index=False)

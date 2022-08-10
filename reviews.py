@@ -10,6 +10,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+
+S=Service(ChromeDriverManager().install())
+DRIVER = webdriver.Chrome(service=S)
 
 NO_OF_PAGES = 100
 START = 32166
